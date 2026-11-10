@@ -1,0 +1,396 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>گزارش Free Claude Code</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: a single reading column on a dark navy field, with one wide interactive diagram and a bar chart as the visual anchors. */
+:root{
+  --bg:#f3f6fb; --surface:#ffffff; --surface2:#e9eef8; --line:#d3dcee;
+  --fg:#10193a; --mute:#55638a;
+  --teal:#0a8f86; --teal-soft:#d4f1ee;
+  --amber:#b4690a; --amber-soft:#fbead0;
+  --rose:#c0304f; --rose-soft:#fbdfe5;
+  --violet:#5a3fd0; --violet-soft:#e6e0fb;
+  --hero1:#0d1a44; --hero2:#0c5a63;
+  --font:"Vazirmatn","Tahoma","DejaVu Sans",sans-serif;
+  --mono:"JetBrains Mono","DejaVu Sans Mono",monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#080d1e; --surface:#0f1730; --surface2:#16214a; --line:#25326a;
+  --fg:#e8eefc; --mute:#95a5cc;
+  --teal:#2dd4bf; --teal-soft:#0d3a3c;
+  --amber:#fbbf24; --amber-soft:#3a2d0c;
+  --rose:#fb7185; --rose-soft:#42151f;
+  --violet:#a78bfa; --violet-soft:#2a1f5e;
+  --hero1:#0b1538; --hero2:#0b4a52; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#080d1e; --surface:#0f1730; --surface2:#16214a; --line:#25326a;
+  --fg:#e8eefc; --mute:#95a5cc;
+  --teal:#2dd4bf; --teal-soft:#0d3a3c;
+  --amber:#fbbf24; --amber-soft:#3a2d0c;
+  --rose:#fb7185; --rose-soft:#42151f;
+  --violet:#a78bfa; --violet-soft:#2a1f5e;
+  --hero1:#0b1538; --hero2:#0b4a52; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;direction:rtl}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font);line-height:2;font-size:15.5px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 60px}
+.wrap{max-width:980px;margin:0 auto}
+h1,h2,h3{text-wrap:balance;line-height:1.5;margin:0}
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-size:.86em}
+code{font-family:var(--mono);direction:ltr;unicode-bidi:isolate;font-size:.82em;background:var(--surface2);border-radius:6px;padding:1px 7px}
+
+/* hero */
+.hero{margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:64px max(16px,env(safe-area-inset-left,0px)) 56px;
+  background:radial-gradient(700px 380px at 12% 0%,rgba(45,212,191,.35),transparent 70%),radial-gradient(600px 400px at 95% 100%,rgba(167,139,250,.30),transparent 70%),linear-gradient(160deg,var(--hero1),var(--hero2));color:#eef4ff;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:44px 44px;-webkit-mask-image:radial-gradient(ellipse at 80% 20%,#000,transparent 70%);mask-image:radial-gradient(ellipse at 80% 20%,#000,transparent 70%)}
+.hero .wrap{position:relative}
+.pill{display:inline-flex;gap:8px;align-items:center;font-size:13px;padding:3px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08)}
+.pill i{width:8px;height:8px;border-radius:50%;background:#2dd4bf;box-shadow:0 0 10px #2dd4bf}
+.hero h1{font-size:clamp(34px,6.4vw,62px);font-weight:900;margin-top:22px}
+.hero h1 span{background:linear-gradient(90deg,#5eead4,#7dd3fc 55%,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent;direction:ltr;unicode-bidi:isolate;display:inline-block}
+.hero p{max-width:60ch;color:#c4d2f0;font-size:17px;margin:18px 0 0}
+.meta{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:30px;font-size:13px;color:#a9b9de}
+.meta b{display:block;color:#fff;font-weight:500;font-size:14px}
+.theme-btn{position:absolute;top:0;left:0;font:inherit;font-size:12.5px;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 14px;cursor:pointer}
+.theme-btn:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);
+  margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:0 max(16px,env(safe-area-inset-left,0px))}
+nav.toc .wrap{display:flex;gap:4px;overflow-x:auto;padding-block:8px;scrollbar-width:none}
+nav.toc a{white-space:nowrap;text-decoration:none;color:var(--mute);font-size:13.5px;padding:2px 13px;border-radius:999px}
+nav.toc a:hover{background:var(--surface2);color:var(--fg)}
+
+section{padding-top:68px}
+.eyebrow{font-size:13px;letter-spacing:0;color:var(--teal);font-weight:700}
+h2{font-size:clamp(26px,4vw,36px);font-weight:900;margin-top:2px}
+.lead{color:var(--mute);max-width:66ch;margin:12px 0 28px}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px 20px}
+.stat .n{font-size:38px;font-weight:900;line-height:1.3;background:linear-gradient(120deg,var(--teal),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent;font-variant-numeric:tabular-nums}
+.stat .l{font-size:13.5px;color:var(--mute);line-height:1.8}
+
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px}
+.box{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:22px 24px;min-width:0}
+.box h3{font-size:18px;font-weight:700;margin-bottom:6px}
+.box ul{margin:0;padding-inline-start:20px;color:var(--mute)}
+.box li{margin-block:3px}
+.note{margin-top:20px;padding:16px 20px;border-radius:14px;background:var(--amber-soft);color:var(--fg);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);font-size:14.5px}
+.note b{color:var(--amber)}
+
+/* architecture */
+.arch{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:stretch}
+@media(max-width:760px){.arch{grid-template-columns:1fr}}
+.flow{display:flex;flex-direction:column;gap:10px}
+.flow .tier{display:flex;align-items:center;gap:14px;text-align:start;font:inherit;color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 18px;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.flow .tier:hover{transform:translateX(-4px)}
+.flow .tier[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft)}
+.tier .ic{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-weight:900;color:#fff;font-family:var(--mono);font-size:13px}
+.tier b{display:block;font-size:16px}
+.tier span.s{display:block;font-size:12.5px;color:var(--mute);direction:ltr;text-align:right;font-family:var(--mono)}
+.flow .arrow{align-self:center;color:var(--mute);font-size:18px;line-height:1}
+.detail{background:linear-gradient(160deg,var(--hero1),var(--hero2));color:#eef4ff;border-radius:20px;padding:26px 28px;min-height:340px}
+.detail h3{font-size:22px;margin-bottom:8px}
+.detail p{color:#c4d2f0;margin:0 0 14px;font-size:14.5px}
+.detail .files{display:flex;flex-wrap:wrap;gap:8px}
+.detail .files code{background:rgba(255,255,255,.12);color:#e8f6ff}
+.sides{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.chip{font-size:13px;padding:1px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
+
+/* chart */
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:22px 24px}
+.bar{display:grid;grid-template-columns:96px minmax(0,1fr) 62px;align-items:center;gap:12px;padding-block:5px;cursor:default}
+.bar .k{direction:ltr;text-align:right;font-family:var(--mono);font-size:13px;color:var(--mute)}
+.bar .track{height:22px;background:var(--surface2);border-radius:999px;overflow:hidden;direction:ltr}
+.bar .fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--teal),#38bdf8);width:0;transition:width 1s cubic-bezier(.2,.8,.2,1)}
+.bar.alt .fill{background:linear-gradient(90deg,var(--violet),#c4b5fd)}
+.bar .v{font-variant-numeric:tabular-nums;font-weight:700;text-align:left}
+.bar:hover .k,.bar:hover .v{color:var(--teal)}
+.bar .note2{grid-column:2/4;font-size:12.5px;color:var(--mute);margin-top:-2px;line-height:1.7}
+
+/* providers */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.filters button{font:inherit;font-size:13.5px;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:2px 16px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.prov{display:flex;flex-wrap:wrap;gap:8px}
+.prov span{direction:ltr;font-size:13.5px;padding:3px 14px;border-radius:12px;border:1px solid var(--line);background:var(--surface);font-family:var(--mono)}
+.prov span[data-g="local"]{border-color:var(--teal)}
+.prov span[data-g="cloud"]{border-color:var(--violet)}
+.prov span[data-g="free"]{border-color:var(--amber)}
+.prov span[hidden]{display:none}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--mute);margin-top:14px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:6px}
+
+/* table */
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th{text-align:start;background:var(--surface2);padding:11px 16px;font-weight:700}
+td{padding:11px 16px;border-top:1px solid var(--line);color:var(--mute);vertical-align:top}
+td:first-child{color:var(--fg)}
+
+/* swot tabs */
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tabs button{font:inherit;font-weight:700;font-size:14.5px;border-radius:12px;padding:4px 20px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer}
+.tabs button[aria-selected="true"].good{background:var(--teal-soft);border-color:var(--teal);color:var(--teal)}
+.tabs button[aria-selected="true"].risk{background:var(--rose-soft);border-color:var(--rose);color:var(--rose)}
+.tabs button[aria-selected="true"].todo{background:var(--amber-soft);border-color:var(--amber);color:var(--amber)}
+.panel .item{display:flex;gap:14px;padding:14px 4px;border-bottom:1px solid var(--line)}
+.panel .item:last-child{border-bottom:0}
+.panel .dot{flex:none;width:10px;height:10px;border-radius:3px;margin-top:12px}
+.panel b{display:block}
+.panel small{color:var(--mute);font-size:14px;line-height:1.9;display:block}
+
+/* terminal */
+.term{direction:ltr;text-align:left;background:#070c1c;color:#d7e3ff;border-radius:16px;border:1px solid #1f2d5c;padding:18px 22px;font-family:var(--mono);font-size:13.5px;line-height:2.1;position:relative;overflow-x:auto}
+.term .c{color:#6f84b8}
+.term .p{color:#2dd4bf}
+.copy{position:absolute;top:10px;right:10px;font:inherit;font-family:var(--font);font-size:12.5px;color:#d7e3ff;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:8px;padding:0 12px;cursor:pointer}
+
+.verdict{margin-top:30px;border-radius:22px;padding:30px 32px;background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#eef4ff}
+.verdict h3{font-size:22px;color:#5eead4;margin-bottom:6px}
+.verdict p{margin:0;color:#d4e1fa;max-width:70ch}
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--line);color:var(--mute);font-size:13px}
+
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <button class="theme-btn" id="themeBtn" type="button">تغییر تم</button>
+    <span class="pill"><i></i> گزارش تحلیل فنی · بر پایهٔ کامیت <span class="mono">d35a0a4</span></span>
+    <h1><span>Free Claude Code</span><br>یک دروازهٔ محلی برای همهٔ عامل‌های کدنویسی</h1>
+    <p>FCC روی رایانهٔ شما اجرا می‌شود و درخواست ابزارهایی مثل Claude Code، Codex و Aider را به هر مدل و هر ارائه‌دهنده‌ای که انتخاب کنید می‌رساند. این گزارش ساختار کد، معماری، قابلیت‌ها و ریسک‌های آن را بررسی می‌کند.</p>
+    <div class="meta">
+      <div>مخزن<b class="mono">alishahryar1/free-claude-code</b></div>
+      <div>آخرین کامیت<b class="mono">۲۰۲۶-۱۱-۰۶</b></div>
+      <div>مجوز<b class="mono">AGPL-3.0-only</b></div>
+      <div>زبان<b class="mono">Python 3.14</b></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc"><div class="wrap">
+  <a href="#summary">خلاصه</a><a href="#arch">معماری</a><a href="#code">ساختار کد</a><a href="#features">قابلیت‌ها</a><a href="#providers">ارائه‌دهندگان</a><a href="#quality">کیفیت و امنیت</a><a href="#verdict">ارزیابی</a><a href="#start">شروع سریع</a>
+</div></nav>
+
+<main class="wrap">
+
+<section id="summary">
+  <div class="eyebrow">خلاصه</div>
+  <h2>پراکسی‌ای که ابزار را از مدل جدا می‌کند</h2>
+  <p class="lead">ابزارهای کدنویسی معمولاً به یک مدل مشخص وصل‌اند. FCC بین ابزار و مدل می‌نشیند، پروتکل‌ها را به هم ترجمه می‌کند و استریم، فراخوانی ابزار و حالت تفکر را حفظ می‌کند. طبق README این پروژه مستقل است و وابسته به Anthropic نیست.</p>
+  <div class="stats">
+    <div class="stat"><div class="n" data-n="66.9" data-suffix="k">۰</div><div class="l">ستاره در GitHub</div></div>
+    <div class="stat"><div class="n" data-n="10.4" data-suffix="k">۰</div><div class="l">فورک</div></div>
+    <div class="stat"><div class="n" data-n="12">۰</div><div class="l">ابزار کدنویسی پشتیبانی‌شده</div></div>
+    <div class="stat"><div class="n" data-n="61">۰</div><div class="l">ارائه‌دهندهٔ مدل در README</div></div>
+    <div class="stat"><div class="n" data-n="80.6" data-suffix="k">۰</div><div class="l">خط پایتون در <span class="mono">src</span></div></div>
+    <div class="stat"><div class="n" data-n="448">۰</div><div class="l">فایل آزمون</div></div>
+  </div>
+  <div class="grid2" style="margin-top:16px">
+    <div class="box"><h3>چرا مهم است؟</h3><ul>
+      <li>هزینهٔ عامل‌های کدنویسی با جابه‌جایی آزاد بین مدل‌ها قابل کنترل می‌شود.</li>
+      <li>یک پنل واحد برای کلیدها، مدل‌ها و fallbackها دارد.</li>
+      <li>چهار خانوادهٔ پروتکل را می‌فهمد: Anthropic، OpenAI Chat، OpenAI Responses و Gemini.</li></ul></div>
+    <div class="box"><h3>برداشت کلی</h3><ul>
+      <li>کد لایه‌بندی‌شده است و آزمون‌ها حدود ۱٫۹ برابر کد تولیدی‌اند.</li>
+      <li>گستردگی پروژه هزینهٔ نگهداری دارد: ۲۶۵ ایشو و ۸۱ پول‌ریکوئست باز.</li>
+      <li>ریسک‌های اصلی غیرفنی‌اند: شرایط استفادهٔ ارائه‌دهندگان، سهمیهٔ رایگان و مجوز AGPL.</li></ul></div>
+  </div>
+  <div class="note"><b>روش:</b> آمار ستاره و ایشو از صفحهٔ GitHub آمده و شمارش فایل و خط از کلون سطحی آخرین کامیت است. کد اجرا نشده است. عددهایی مثل «۱٫۳ میلیارد توکن رایگان در ماه» و «تا ۹۰٪ صرفه‌جویی توکن» ادعای README هستند و راستی‌آزمایی نشده‌اند.</div>
+</section>
+
+<section id="arch">
+  <div class="eyebrow">معماری</div>
+  <h2>مسیر یک درخواست</h2>
+  <p class="lead">سرور روی <span class="mono">127.0.0.1:8082</span> گوش می‌دهد. روی هر لایه بزنید تا مسئولیت و فایل‌های اصلی آن را ببینید.</p>
+  <div class="arch">
+    <div class="flow" id="flow"></div>
+    <div class="detail" id="detail" aria-live="polite"></div>
+  </div>
+  <div class="sides">
+    <span class="chip">کنار مسیر: پنل Admin فقط محلی</span>
+    <span class="chip">SQLite برای نشست‌ها و تنظیمات</span>
+    <span class="chip">پل Discord و Telegram</span>
+    <span class="chip">رونویسی صوتی با Whisper</span>
+  </div>
+</section>
+
+<section id="code">
+  <div class="eyebrow">ساختار کد</div>
+  <h2>کد کجا زندگی می‌کند؟</h2>
+  <p class="lead">پکیج اصلی حدود ۴۳۴ فایل پایتون و ۸۰٬۶۰۰ خط دارد. بیشترین حجم مال آداپتورهای ارائه‌دهندگان است، چون هر کدام ناسازگاری‌های خودش را دارد.</p>
+  <div class="chart" id="chart" role="img" aria-label="نمودار میله‌ای خطوط کد در هر ماژول"></div>
+  <div class="tablewrap" style="margin-top:16px"><table>
+    <tr><th>ماژول</th><th>نقش</th></tr>
+    <tr><td><span class="mono">providers/</span></td><td>آداپتور ارائه‌دهندگان، ادامهٔ استریم، بازیابی خطا، ظرفیت پذیرش، OAuth</td></tr>
+    <tr><td><span class="mono">core/</span></td><td>مدل‌های درخواست و پاسخ برای چهار پروتکل، شمارش توکن، rate-limit، تریس</td></tr>
+    <tr><td><span class="mono">messaging/</span></td><td>پل Discord و Telegram، درخت مکالمه، رندر پیام</td></tr>
+    <tr><td><span class="mono">cli/ · harnesses/</span></td><td>۱۲ لانچر و یکپارچه‌سازی با VS Code، JetBrains و Claude Desktop</td></tr>
+    <tr><td><span class="mono">runtime/ · config/</span></td><td>راه‌اندازی، SQLite و مهاجرت‌ها، کاتالوگ ارائه‌دهندگان و تنظیمات</td></tr>
+  </table></div>
+</section>
+
+<section id="features">
+  <div class="eyebrow">قابلیت‌ها</div>
+  <h2>آنچه کاربر می‌بیند</h2>
+  <p class="lead">پیکربندی از پنل مرورگر یا متغیرهای محیطی انجام می‌شود.</p>
+  <div class="grid2">
+    <div class="box"><h3>مسیریابی بر اساس لایه</h3>
+      <p style="margin:0;color:var(--mute)">هر لایهٔ Claude Code مدل جدا می‌گیرد: <code>MODEL</code> <code>MODEL_OPUS</code> <code>MODEL_SONNET</code> <code>MODEL_HAIKU</code> <code>MODEL_FABLE</code>. هر مدل فهرست fallback با سطح استدلال و شمارهٔ کلید مخصوص خودش دارد.</p></div>
+    <div class="box"><h3>پنل Admin</h3><ul>
+      <li>ثبت کلید و تست اتصال</li><li>ورود OAuth برای ChatGPT و GitHub Copilot</li><li>کشف خودکار LM Studio، llama.cpp و Ollama</li></ul></div>
+    <div class="box"><h3>دسترسی از هرجا</h3><ul>
+      <li>ترمینال، اپ‌های دسکتاپ و IDE</li><li>گوشی از طریق Discord و Telegram (<code>/stats</code> <code>/stop</code> <code>/clear</code>)</li><li>رابط نشست در مرورگر</li></ul></div>
+    <div class="box"><h3>پایداری</h3><ul>
+      <li>تلاش مجدد، محدودیت نرخ و هم‌زمانی</li><li>fallback بین مدل، ارائه‌دهنده و چند کلید</li><li>کاهش توکن با RTK و Headroom (ادعای README)</li></ul></div>
+  </div>
+  <div class="tablewrap" style="margin-top:16px"><table>
+    <tr><th>مسیر</th><th>کاربرد</th></tr>
+    <tr><td><span class="mono">POST /v1/messages</span></td><td>پروتکل Anthropic Messages، مخصوص Claude Code</td></tr>
+    <tr><td><span class="mono">POST /v1/chat/completions</span></td><td>سازگار با OpenAI Chat</td></tr>
+    <tr><td><span class="mono">POST /v1/responses</span></td><td>OpenAI Responses، مخصوص Codex</td></tr>
+    <tr><td><span class="mono">POST /v1beta/models/…</span></td><td>پروتکل Gemini</td></tr>
+    <tr><td><span class="mono">/health · /stop · count_tokens</span></td><td>سلامت سرویس، توقف، شمارش توکن</td></tr>
+  </table></div>
+</section>
+
+<section id="providers">
+  <div class="eyebrow">ارائه‌دهندگان</div>
+  <h2>نمونه‌ای از کاتالوگ ۶۱تایی</h2>
+  <p class="lead">فایل <span class="mono">config/provider_catalog.py</span> نشانی پایهٔ هر ارائه‌دهنده را نگه می‌دارد. فهرست زیر نمونه است، نه کامل.</p>
+  <div class="filters" id="filters" role="group" aria-label="فیلتر ارائه‌دهندگان"></div>
+  <div class="prov" id="prov"></div>
+  <div class="legend"><span><i style="background:var(--teal)"></i>محلی</span><span><i style="background:var(--violet)"></i>ابری و پولی</span><span><i style="background:var(--amber)"></i>سهمیهٔ رایگان یا اشتراکی</span></div>
+</section>
+
+<section id="quality">
+  <div class="eyebrow">کیفیت و امنیت</div>
+  <h2>انضباط مهندسی</h2>
+  <p class="lead">این موارد از خواندن کد و تنظیمات CI به دست آمده‌اند.</p>
+  <div class="grid2">
+    <div class="box"><h3>کیفیت کد</h3><ul>
+      <li><code>ruff</code> برای قالب و لینت، <code>ty</code> برای نوع</li>
+      <li>CI دستورهای <code># type: ignore</code> را رد می‌کند</li>
+      <li>نسخهٔ پایتون روی <code>==3.14.10</code> قفل است</li>
+      <li>تست‌های قرارداد مرز ماژول‌ها را نگه می‌دارند</li></ul></div>
+    <div class="box"><h3>انتشار</h3><ul>
+      <li>عنوان PR باید با <code>patch:</code> یا <code>minor:</code> یا <code>major:</code> شروع شود</li>
+      <li>نسخه بعد از merge خودکار محاسبه و منتشر می‌شود</li>
+      <li>آزمون روی سه سیستم‌عامل به‌علاوهٔ Playwright</li>
+      <li>اکشن‌های CI با هش کامیت پین شده‌اند</li></ul></div>
+  </div>
+  <div class="box" style="margin-top:16px"><h3>مرزهای امنیتی مشاهده‌شده</h3><ul>
+    <li><b>Admin فقط محلی است:</b> <span class="mono">api/admin_security.py</span> هاست و Origin را بررسی می‌کند و فقط loopback را می‌پذیرد.</li>
+    <li><b>احراز هویت اختیاری پراکسی</b> برای هر خانوادهٔ پروتکل وجود دارد.</li>
+    <li><b>اعتبارسنجی سخت‌گیر:</b> درخواست Gemini با فیلد JSON تکراری رد می‌شود.</li>
+    <li>پیش‌فرض سرور <span class="mono">127.0.0.1</span> است. اگر آن را روی شبکه باز کنید، احراز هویت را فعال کنید.</li></ul></div>
+  <div class="note"><b>توجه:</b> این بررسی ممیزی امنیتی نیست و فقط بر پایهٔ خواندن کد است.</div>
+</section>
+
+<section id="verdict">
+  <div class="eyebrow">ارزیابی</div>
+  <h2>قوت‌ها، ریسک‌ها، توصیه‌ها</h2>
+  <p class="lead">سه تب را ببینید.</p>
+  <div class="tabs" role="tablist" id="tabs">
+    <button role="tab" class="good" aria-selected="true" data-t="good">نقاط قوت</button>
+    <button role="tab" class="risk" aria-selected="false" data-t="risk">ریسک‌ها</button>
+    <button role="tab" class="todo" aria-selected="false" data-t="todo">توصیه‌ها</button>
+  </div>
+  <div class="box panel" id="panel"></div>
+  <div class="verdict"><h3>جمع‌بندی</h3><p>FCC بالغ‌تر از یک اسکریپت پراکسی ساده است: معماری چندلایه، ترجمهٔ چندپروتکلی، آزمون‌های گسترده و نصب و به‌روزرسانی خودکار دارد. برای اجرای عامل‌های کدنویسی با مدل‌های دلخواه یا محلی گزینهٔ قدرتمندی است. ارزش واقعی آن به پایداری سهمیه‌ها و رعایت شرایط استفادهٔ ارائه‌دهندگان بستگی دارد، نه فقط به کیفیت کد.</p></div>
+</section>
+
+<section id="start">
+  <div class="eyebrow">شروع سریع</div>
+  <h2>از نصب تا اجرا</h2>
+  <p class="lead">مراحل طبق README. مدل پیش‌فرض نمونه <span class="mono">nvidia_nim/nvidia/nemotron-3-ultra-550b-a55b</span> است.</p>
+  <div class="term" id="term"><button class="copy" id="copyBtn" type="button">کپی</button><pre style="margin:0;font:inherit" id="termText"><span class="c"># 1. نصب با اسکریپت README (macOS / Linux)</span>
+<span class="p">$</span> sh install.sh
+
+<span class="c"># 2. اجرای سرور (لینوکس)</span>
+<span class="p">$</span> fcc-server
+
+<span class="c"># 3. کلید NVIDIA NIM را در Admin UI وارد کنید</span>
+<span class="c"># 4. اجرای ابزار دلخواه</span>
+<span class="p">$</span> fcc-claude
+
+<span class="c"># عیب‌یابی</span>
+<span class="p">$</span> fcc-doctor</pre></div>
+</section>
+
+<footer>منبع: صفحهٔ GitHub و کلون سطحی کامیت <span class="mono">d35a0a4</span>. کد اجرا نشده است.</footer>
+</main>
+
+<script>
+const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace('.','٫');
+
+/* theme */
+(function(){const b=document.getElementById('themeBtn');b.onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dark?'light':'dark'}})();
+
+/* stat counters */
+function countUp(el){const t=parseFloat(el.dataset.n),suf=el.dataset.suffix||'',dec=(String(el.dataset.n).split('.')[1]||'').length;
+  const set=v=>el.textContent=fa(v.toFixed(dec))+suf;
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches){set(t);return}
+  const t0=performance.now();(function f(n){const p=Math.min(1,(n-t0)/900);set(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)})(t0)}
+document.querySelectorAll('.stat .n').forEach(el=>{el.textContent=fa(el.dataset.n)+(el.dataset.suffix||'');});
+const so=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){countUp(e.target);so.unobserve(e.target)}}),{threshold:.4});
+document.querySelectorAll('.stat .n').forEach(el=>so.observe(el));
+
+/* architecture */
+const tiers=[
+ {k:'API',c:'#0ea5a0',t:'ورودی‌ها (api/)',s:'/v1/messages · /v1/chat/completions · /v1/responses · /v1beta/models',d:'چهار دروازه برای چهار خانوادهٔ پروتکل. اعتبارسنجی ورودی، احراز هویت اختیاری پراکسی و استریم پاسخ در این لایه است. آخرین کامیت ورودی Chat Completions و خروجی بومی Gemini را اضافه کرده است.',f:['api/routes.py','api/handlers/','api/dependencies.py','api/response_streams.py']},
+ {k:'APP',c:'#6366f1',t:'مسیریابی مدل (application/)',s:'tier → provider/model + fallback',d:'نام مدل درخواست را به یک ارائه‌دهنده و مدل واقعی تبدیل می‌کند. لایه‌های Opus، Sonnet، Haiku و Fable هر کدام مقصد خودشان را دارند و سیاست استدلال همین‌جا تعیین می‌شود.',f:['application/routing.py','application/reasoning.py','config/model_refs.py']},
+ {k:'CORE',c:'#0284c7',t:'هسته: ترجمهٔ پروتکل (core/)',s:'Anthropic ⇄ OpenAI ⇄ Gemini',d:'مدل‌های درخواست و پاسخ برای چهار پروتکل، تخمین توکن با tiktoken، سیاست‌های بازیابی استریم و ادامهٔ پاسخ.',f:['core/anthropic/','core/openai_responses/','core/gemini/','core/chat_completions/','core/token_estimation.py']},
+ {k:'PRV',c:'#d97706',t:'آداپتور ارائه‌دهندگان (providers/)',s:'retry · rate-limit · admission · recovery',d:'پرحجم‌ترین لایه با ۱۲۱ فایل. هر ارائه‌دهنده ناسازگاری‌های خودش را دارد: فرمت reasoning، نام ابزارها، سقف خروجی و روش احراز هویت. ظرفیت پذیرش و بازیابی خطا هم این‌جاست.',f:['providers/openai_chat/','providers/nvidia_nim/','providers/github_copilot/','providers/admission.py','providers/stream_recovery.py']},
+ {k:'UP',c:'#16a34a',t:'ارائه‌دهندهٔ بالادستی',s:'HTTPS یا localhost',d:'سرویس ابری مثل NVIDIA NIM، OpenRouter، Gemini یا یک سرور محلی مثل Ollama. پاسخ به همین مسیر برمی‌گردد و به قالب پروتکل ابزار اولیه ترجمه می‌شود.',f:['NVIDIA NIM','OpenRouter','Ollama','LM Studio']}
+];
+const flow=document.getElementById('flow'),detail=document.getElementById('detail');
+function show(i){[...flow.querySelectorAll('.tier')].forEach((b,j)=>b.setAttribute('aria-pressed',j===i));const t=tiers[i];
+  detail.innerHTML=`<h3>${t.t}</h3><p>${t.d}</p><div class="files">${t.f.map(x=>`<code>${x}</code>`).join('')}</div>`}
+tiers.forEach((t,i)=>{if(i)flow.insertAdjacentHTML('beforeend','<div class="arrow" aria-hidden="true">↓</div>');
+  const b=document.createElement('button');b.type='button';b.className='tier';b.setAttribute('aria-pressed','false');
+  b.innerHTML=`<span class="ic" style="background:${t.c}">${t.k}</span><span><b>${t.t}</b><span class="s">${t.s}</span></span>`;
+  b.onclick=()=>show(i);flow.appendChild(b)});
+show(0);
+
+/* bar chart */
+const mods=[['providers',24.2],['core',17.3],['messaging',9.1],['runtime',7.6],['config',5.4],['api',5.2],['application',5.2],['cli',4.1],['harnesses',2.6]];
+const ch=document.getElementById('chart'),max=24.2;
+ch.innerHTML=mods.map(([k,v],i)=>`<div class="bar${i>1?' alt':''}"><span class="k">${k}</span><div class="track"><div class="fill" data-w="${v/max*100}"></div></div><span class="v">${fa(v)}k</span></div>`).join('')+'<div style="margin-top:10px;font-size:12.5px;color:var(--mute)">عدد هر ردیف: هزار خط پایتون. مجموع ماژول‌های نمایش‌داده‌شده حدود ۸۰٫۶ هزار خط است.</div>';
+const co=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){ch.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%');co.disconnect()}}),{threshold:.25});co.observe(ch);
+setTimeout(()=>ch.querySelectorAll('.fill').forEach(f=>f.style.width=f.dataset.w+'%'),1500);
+
+/* providers */
+const P=[['NVIDIA NIM','free'],['OpenRouter','free'],['Groq','free'],['Cerebras','free'],['SambaNova','free'],['Mistral','free'],['Cloudflare AI','free'],['Hugging Face','free'],['Kilo','free'],['OpenCode Zen','free'],['GitHub Copilot','free'],['OpenAI / Codex','free'],
+ ['OpenAI','cloud'],['Anthropic','cloud'],['Google Gemini','cloud'],['Vertex AI','cloud'],['xAI','cloud'],['DeepSeek','cloud'],['Kimi','cloud'],['MiniMax','cloud'],['Z.ai','cloud'],['Alibaba / Qwen','cloud'],['Amazon Bedrock','cloud'],['Azure OpenAI','cloud'],['Fireworks','cloud'],['Cohere','cloud'],['Vercel AI Gateway','cloud'],
+ ['Ollama','local'],['LM Studio','local'],['llama.cpp','local'],['Custom OpenAI-compatible','local']];
+const fl=[['all','همه'],['free','سهمیه/اشتراک'],['cloud','ابری'],['local','محلی']];
+const fe=document.getElementById('filters'),pe=document.getElementById('prov');
+pe.innerHTML=P.map(([n,g])=>`<span data-g="${g}">${n}</span>`).join('');
+fe.innerHTML=fl.map(([k,l],i)=>`<button type="button" data-k="${k}" aria-pressed="${i===0}">${l}</button>`).join('');
+fe.onclick=e=>{const b=e.target.closest('button');if(!b)return;fe.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  pe.querySelectorAll('span').forEach(s=>s.hidden=b.dataset.k!=='all'&&s.dataset.g!==b.dataset.k)};
+
+/* tabs */
+const T={
+ good:[['var(--teal)','پوشش وسیع','۱۲ ابزار و ۶۱ ارائه‌دهنده در یک نقطه.'],['var(--teal)','مسیریابی انعطاف‌پذیر','لایه‌ها، fallback و چند کلید برای هر مدل.'],['var(--teal)','معماری و آزمون','لایه‌بندی با تست قرارداد و ۴۴۸ فایل آزمون.'],['var(--teal)','مرز امنیتی محلی','پنل Admin فقط از loopback در دسترس است.'],['var(--teal)','توسعهٔ فعال','آخرین کامیت یک روز پیش از این بررسی بوده است.']],
+ risk:[['var(--rose)','شرایط استفادهٔ ارائه‌دهندگان','README می‌گوید اگر یکپارچه‌سازی‌ای مجاز نباشد حذفش می‌کند. استفاده از اشتراک‌های OAuth نیاز به بررسی دقیق دارد.'],['var(--rose)','ناپایداری سهمیهٔ رایگان','هر ارائه‌دهنده می‌تواند سهمیه را تغییر دهد.'],['var(--rose)','هزینهٔ نصب','پایتون ۳٫۱۴٫۱۰ قفل شده و حدود ۳۰ وابستگی مستقیم (مثل grpcio) دارد.'],['var(--rose)','مجوز AGPL-3.0','برای استفادهٔ سازمانی یا ارائه به‌عنوان سرویس الزام‌آور است.'],['var(--rose)','فشار نگهداری','۲۶۵ ایشو و ۸۱ پول‌ریکوئست باز.']],
+ todo:[['var(--amber)','شروع شخصی','با یک ارائه‌دهندهٔ رسمی و کلید خودتان شروع کنید.'],['var(--amber)','شرایط استفاده','پیش از وصل کردن اشتراک‌های OAuth شرایط هر سرویس را بخوانید.'],['var(--amber)','محصول تجاری','مجوز AGPL را با مشاور حقوقی بررسی کنید.'],['var(--amber)','fallback','مدل جایگزین تعریف کنید تا قطع سهمیه کار را متوقف نکند.'],['var(--amber)','شبکه','بدون احراز هویت سرور را روی شبکه باز نکنید.']]};
+const panel=document.getElementById('panel'),tabs=document.getElementById('tabs');
+function tab(k){tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',b.dataset.t===k));
+  panel.innerHTML=T[k].map(([c,h,s])=>`<div class="item"><span class="dot" style="background:${c}"></span><div><b>${h}</b><small>${s}</small></div></div>`).join('')}
+tabs.onclick=e=>{const b=e.target.closest('button');if(b)tab(b.dataset.t)};tab('good');
+
+/* copy */
+document.getElementById('copyBtn').onclick=async e=>{const txt='sh install.sh\nfcc-server\nfcc-claude\nfcc-doctor';const b=e.currentTarget;
+  try{await navigator.clipboard.writeText(txt);b.textContent='کپی شد'}catch(_){const r=document.createRange();r.selectNodeContents(document.getElementById('termText'));const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='انتخاب شد'}
+  setTimeout(()=>b.textContent='کپی',1600)};
+</script>
+
+</body></html>
